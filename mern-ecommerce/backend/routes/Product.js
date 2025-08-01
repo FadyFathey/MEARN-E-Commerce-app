@@ -2,7 +2,7 @@ const express = require('express');
 const productController = require('../controllers/Product');
 const { verifyToken } = require('../middleware/VerifyToken');
 const { verifyAdmin } = require('../middleware/VerifyAdmin');
-const { validateProduct } = require('../middleware/Validation');
+const { validateProduct, validateProductAttributes } = require('../middleware/Validation');
 const router = express.Router();
 
 router
@@ -13,5 +13,23 @@ router
   .patch('/:id', verifyToken, verifyAdmin, validateProduct, productController.updateById)
   .patch('/undelete/:id', verifyToken, verifyAdmin, productController.undeleteById)
   .delete('/:id', verifyToken, verifyAdmin, productController.deleteById);
+
+// Admin-specific routes for managing product attributes
+router
+  .get('/featured', productController.getFeaturedProducts)
+  .get('/top-sellers', productController.getTopSellers)
+  .get('/new-arrivals', productController.getNewArrivals)
+  .get('/best-deals', productController.getBestDeals)
+  .get('/flash-deals', productController.getFlashDeals)
+  .get('/trending', productController.getTrendingProducts)
+  .get('/tags', productController.getAllTags)
+  .get('/tag/:tag', productController.getProductsByTag)
+  .patch(
+    '/:id/attributes',
+    verifyToken,
+    verifyAdmin,
+    validateProductAttributes,
+    productController.updateProductAttributes
+  );
 
 module.exports = router;
