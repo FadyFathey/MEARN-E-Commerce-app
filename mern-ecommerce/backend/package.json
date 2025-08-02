@@ -7,23 +7,30 @@
     "start": "node index.js",
     "dev": "nodemon index.js",
     "seed": "node seed/seed.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "seed-diverse": "node seed/seedDiverseProducts.js",
+    "clear-and-seed": "node seed/clearAndSeed.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "echo \"No build step required for Node.js backend\"",
+    "lint": "echo \"No linter configured\"",
+    "clean": "rm -rf node_modules package-lock.json && npm install"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "axios": "^1.11.0",
     "bcryptjs": "^2.4.3",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
+    "google-auth-library": "^9.15.1",
+    "joi": "^17.13.3",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.0.2",
     "morgan": "^1.10.0",
     "nodemailer": "^6.9.7",
-    "stripe": "^12.0.0",
-    "google-auth-library": "^9.0.0"
+    "stripe": "^12.0.0"
   },
   "devDependencies": {
     "nodemon": "^3.0.2"

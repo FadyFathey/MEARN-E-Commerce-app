@@ -6,7 +6,7 @@
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "variable": [
-    { "key": "base_url", "value": "http://localhost:5000" },
+    { "key": "base_url", "value": "http://localhost:8000" },
     { "key": "token", "value": "" },
     { "key": "userId", "value": "" },
     { "key": "productId", "value": "" },
@@ -178,9 +178,9 @@
           "request": {
             "method": "GET",
             "url": {
-              "raw": "{{base_url}}/api/products?search=shirt&sort=priorityScore&order=desc&page=1&limit=10&category={{categoryId}}&brand={{brandId}}&minPrice=10&maxPrice=100&isFeatured=true&tags=Electronics,Smartphone",
+              "raw": "{{base_url}}/products?search=shirt&sort=priorityScore&order=desc&page=1&limit=10&category={{categoryId}}&brand={{brandId}}&minPrice=10&maxPrice=100&isFeatured=true&tags=Electronics,Smartphone",
               "host": ["{{base_url}}"],
-              "path": ["api", "products"],
+              "path": ["products"],
               "query": [
                 {
                   "key": "search",
@@ -222,9 +222,9 @@
           "request": {
             "method": "GET",
             "url": {
-              "raw": "{{base_url}}/api/products/featured",
+              "raw": "{{base_url}}/products/featured",
               "host": ["{{base_url}}"],
-              "path": ["api", "products", "featured"]
+              "path": ["products", "featured"]
             }
           }
         },
@@ -233,9 +233,9 @@
           "request": {
             "method": "GET",
             "url": {
-              "raw": "{{base_url}}/api/products/top-sellers",
+              "raw": "{{base_url}}/products/top-sellers",
               "host": ["{{base_url}}"],
-              "path": ["api", "products", "top-sellers"]
+              "path": ["products", "top-sellers"]
             }
           }
         },
@@ -244,9 +244,9 @@
           "request": {
             "method": "GET",
             "url": {
-              "raw": "{{base_url}}/api/products/new-arrivals",
+              "raw": "{{base_url}}/products/new-arrivals",
               "host": ["{{base_url}}"],
-              "path": ["api", "products", "new-arrivals"]
+              "path": ["products", "new-arrivals"]
             }
           }
         },
@@ -255,9 +255,9 @@
           "request": {
             "method": "GET",
             "url": {
-              "raw": "{{base_url}}/api/products/best-deals",
+              "raw": "{{base_url}}/products/best-deals",
               "host": ["{{base_url}}"],
-              "path": ["api", "products", "best-deals"]
+              "path": ["products", "best-deals"]
             }
           }
         },
@@ -266,9 +266,9 @@
           "request": {
             "method": "GET",
             "url": {
-              "raw": "{{base_url}}/api/products/flash-deals",
+              "raw": "{{base_url}}/products/flash-deals",
               "host": ["{{base_url}}"],
-              "path": ["api", "products", "flash-deals"]
+              "path": ["products", "flash-deals"]
             }
           }
         },
@@ -277,9 +277,9 @@
           "request": {
             "method": "GET",
             "url": {
-              "raw": "{{base_url}}/api/products/trending",
+              "raw": "{{base_url}}/products/trending",
               "host": ["{{base_url}}"],
-              "path": ["api", "products", "trending"]
+              "path": ["products", "trending"]
             }
           }
         },
@@ -288,9 +288,9 @@
           "request": {
             "method": "GET",
             "url": {
-              "raw": "{{base_url}}/api/products/tags",
+              "raw": "{{base_url}}/products/tags",
               "host": ["{{base_url}}"],
-              "path": ["api", "products", "tags"]
+              "path": ["products", "tags"]
             }
           }
         },
@@ -299,9 +299,9 @@
           "request": {
             "method": "GET",
             "url": {
-              "raw": "{{base_url}}/api/products/tag/Electronics",
+              "raw": "{{base_url}}/products/tag/Electronics",
               "host": ["{{base_url}}"],
-              "path": ["api", "products", "tag", "Electronics"]
+              "path": ["products", "tag", "Electronics"]
             }
           }
         },
@@ -310,9 +310,9 @@
           "request": {
             "method": "GET",
             "url": {
-              "raw": "{{base_url}}/api/products/{{productId}}",
+              "raw": "{{base_url}}/products/{{productId}}",
               "host": ["{{base_url}}"],
-              "path": ["api", "products", "{{productId}}"]
+              "path": ["products", "{{productId}}"]
             }
           }
         },
@@ -321,9 +321,9 @@
           "request": {
             "method": "GET",
             "url": {
-              "raw": "{{base_url}}/api/products/slug/{{slug}}",
+              "raw": "{{base_url}}/products/slug/{{slug}}",
               "host": ["{{base_url}}"],
-              "path": ["api", "products", "slug", "{{slug}}"]
+              "path": ["products", "slug", "{{slug}}"]
             }
           }
         },
@@ -336,9 +336,9 @@
               { "key": "Authorization", "value": "Bearer {{token}}" }
             ],
             "url": {
-              "raw": "{{base_url}}/api/products",
+              "raw": "{{base_url}}/products",
               "host": ["{{base_url}}"],
-              "path": ["api", "products"]
+              "path": ["products"]
             },
             "body": {
               "mode": "raw",
@@ -355,9 +355,9 @@
               { "key": "Authorization", "value": "Bearer {{token}}" }
             ],
             "url": {
-              "raw": "{{base_url}}/api/products/{{productId}}",
+              "raw": "{{base_url}}/products/{{productId}}",
               "host": ["{{base_url}}"],
-              "path": ["api", "products", "{{productId}}"]
+              "path": ["products", "{{productId}}"]
             },
             "body": {
               "mode": "raw",
@@ -374,9 +374,9 @@
               { "key": "Authorization", "value": "Bearer {{token}}" }
             ],
             "url": {
-              "raw": "{{base_url}}/api/products/{{productId}}/attributes",
+              "raw": "{{base_url}}/products/{{productId}}/attributes",
               "host": ["{{base_url}}"],
-              "path": ["api", "products", "{{productId}}", "attributes"]
+              "path": ["products", "{{productId}}", "attributes"]
             },
             "body": {
               "mode": "raw",
@@ -390,9 +390,9 @@
             "method": "DELETE",
             "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
             "url": {
-              "raw": "{{base_url}}/api/products/{{productId}}",
+              "raw": "{{base_url}}/products/{{productId}}",
               "host": ["{{base_url}}"],
-              "path": ["api", "products", "{{productId}}"]
+              "path": ["products", "{{productId}}"]
             }
           }
         }
@@ -406,9 +406,9 @@
           "request": {
             "method": "GET",
             "url": {
-              "raw": "{{base_url}}/api/categories",
+              "raw": "{{base_url}}/categories",
               "host": ["{{base_url}}"],
-              "path": ["api", "categories"]
+              "path": ["categories"]
             }
           }
         },
@@ -421,9 +421,9 @@
               { "key": "Authorization", "value": "Bearer {{token}}" }
             ],
             "url": {
-              "raw": "{{base_url}}/api/categories",
+              "raw": "{{base_url}}/categories",
               "host": ["{{base_url}}"],
-              "path": ["api", "categories"]
+              "path": ["categories"]
             },
             "body": {
               "mode": "raw",
@@ -440,9 +440,9 @@
               { "key": "Authorization", "value": "Bearer {{token}}" }
             ],
             "url": {
-              "raw": "{{base_url}}/api/categories/{{categoryId}}",
+              "raw": "{{base_url}}/categories/{{categoryId}}",
               "host": ["{{base_url}}"],
-              "path": ["api", "categories", "{{categoryId}}"]
+              "path": ["categories", "{{categoryId}}"]
             },
             "body": {
               "mode": "raw",
@@ -456,9 +456,9 @@
             "method": "DELETE",
             "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
             "url": {
-              "raw": "{{base_url}}/api/categories/{{categoryId}}",
+              "raw": "{{base_url}}/categories/{{categoryId}}",
               "host": ["{{base_url}}"],
-              "path": ["api", "categories", "{{categoryId}}"]
+              "path": ["categories", "{{categoryId}}"]
             }
           }
         }
@@ -472,9 +472,9 @@
           "request": {
             "method": "GET",
             "url": {
-              "raw": "{{base_url}}/api/brands",
+              "raw": "{{base_url}}/brands",
               "host": ["{{base_url}}"],
-              "path": ["api", "brands"]
+              "path": ["brands"]
             }
           }
         },
@@ -487,9 +487,9 @@
               { "key": "Authorization", "value": "Bearer {{token}}" }
             ],
             "url": {
-              "raw": "{{base_url}}/api/brands",
+              "raw": "{{base_url}}/brands",
               "host": ["{{base_url}}"],
-              "path": ["api", "brands"]
+              "path": ["brands"]
             },
             "body": {
               "mode": "raw",
@@ -506,9 +506,9 @@
               { "key": "Authorization", "value": "Bearer {{token}}" }
             ],
             "url": {
-              "raw": "{{base_url}}/api/brands/{{brandId}}",
+              "raw": "{{base_url}}/brands/{{brandId}}",
               "host": ["{{base_url}}"],
-              "path": ["api", "brands", "{{brandId}}"]
+              "path": ["brands", "{{brandId}}"]
             },
             "body": {
               "mode": "raw",
@@ -522,9 +522,9 @@
             "method": "DELETE",
             "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
             "url": {
-              "raw": "{{base_url}}/api/brands/{{brandId}}",
+              "raw": "{{base_url}}/brands/{{brandId}}",
               "host": ["{{base_url}}"],
-              "path": ["api", "brands", "{{brandId}}"]
+              "path": ["brands", "{{brandId}}"]
             }
           }
         }
@@ -539,9 +539,9 @@
             "method": "GET",
             "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
             "url": {
-              "raw": "{{base_url}}/api/users/{{userId}}",
+              "raw": "{{base_url}}/users/{{userId}}",
               "host": ["{{base_url}}"],
-              "path": ["api", "users", "{{userId}}"]
+              "path": ["users", "{{userId}}"]
             }
           }
         },
@@ -554,9 +554,9 @@
               { "key": "Authorization", "value": "Bearer {{token}}" }
             ],
             "url": {
-              "raw": "{{base_url}}/api/users/{{userId}}",
+              "raw": "{{base_url}}/users/{{userId}}",
               "host": ["{{base_url}}"],
-              "path": ["api", "users", "{{userId}}"]
+              "path": ["users", "{{userId}}"]
             },
             "body": {
               "mode": "raw",
@@ -570,9 +570,9 @@
             "method": "DELETE",
             "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
             "url": {
-              "raw": "{{base_url}}/api/users/{{userId}}",
+              "raw": "{{base_url}}/users/{{userId}}",
               "host": ["{{base_url}}"],
-              "path": ["api", "users", "{{userId}}"]
+              "path": ["users", "{{userId}}"]
             }
           }
         }
@@ -587,9 +587,9 @@
             "method": "GET",
             "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
             "url": {
-              "raw": "{{base_url}}/api/cart/user/{{userId}}",
+              "raw": "{{base_url}}/cart/user/{{userId}}",
               "host": ["{{base_url}}"],
-              "path": ["api", "cart", "user", "{{userId}}"]
+              "path": ["cart", "user", "{{userId}}"]
             }
           }
         },
@@ -602,9 +602,9 @@
               { "key": "Authorization", "value": "Bearer {{token}}" }
             ],
             "url": {
-              "raw": "{{base_url}}/api/cart",
+              "raw": "{{base_url}}/cart",
               "host": ["{{base_url}}"],
-              "path": ["api", "cart"]
+              "path": ["cart"]
             },
             "body": {
               "mode": "raw",
@@ -621,9 +621,9 @@
               { "key": "Authorization", "value": "Bearer {{token}}" }
             ],
             "url": {
-              "raw": "{{base_url}}/api/cart/{{cartId}}",
+              "raw": "{{base_url}}/cart/{{cartId}}",
               "host": ["{{base_url}}"],
-              "path": ["api", "cart", "{{cartId}}"]
+              "path": ["cart", "{{cartId}}"]
             },
             "body": {
               "mode": "raw",
@@ -637,9 +637,9 @@
             "method": "DELETE",
             "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
             "url": {
-              "raw": "{{base_url}}/api/cart/{{cartId}}",
+              "raw": "{{base_url}}/cart/{{cartId}}",
               "host": ["{{base_url}}"],
-              "path": ["api", "cart", "{{cartId}}"]
+              "path": ["cart", "{{cartId}}"]
             }
           }
         },
@@ -649,9 +649,9 @@
             "method": "DELETE",
             "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
             "url": {
-              "raw": "{{base_url}}/api/cart/user/{{userId}}",
+              "raw": "{{base_url}}/cart/user/{{userId}}",
               "host": ["{{base_url}}"],
-              "path": ["api", "cart", "user", "{{userId}}"]
+              "path": ["cart", "user", "{{userId}}"]
             }
           }
         }
@@ -666,9 +666,9 @@
             "method": "GET",
             "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
             "url": {
-              "raw": "{{base_url}}/api/wishlist/user/{{userId}}?page=1&limit=10",
+              "raw": "{{base_url}}/wishlist/user/{{userId}}?page=1&limit=10",
               "host": ["{{base_url}}"],
-              "path": ["api", "wishlist", "user", "{{userId}}"],
+              "path": ["wishlist", "user", "{{userId}}"],
               "query": [
                 { "key": "page", "value": "1" },
                 { "key": "limit", "value": "10" }
@@ -685,9 +685,9 @@
               { "key": "Authorization", "value": "Bearer {{token}}" }
             ],
             "url": {
-              "raw": "{{base_url}}/api/wishlist",
+              "raw": "{{base_url}}/wishlist",
               "host": ["{{base_url}}"],
-              "path": ["api", "wishlist"]
+              "path": ["wishlist"]
             },
             "body": {
               "mode": "raw",
@@ -701,9 +701,9 @@
             "method": "DELETE",
             "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
             "url": {
-              "raw": "{{base_url}}/api/wishlist/{{wishlistId}}",
+              "raw": "{{base_url}}/wishlist/{{wishlistId}}",
               "host": ["{{base_url}}"],
-              "path": ["api", "wishlist", "{{wishlistId}}"]
+              "path": ["wishlist", "{{wishlistId}}"]
             }
           }
         }
@@ -718,9 +718,9 @@
             "method": "GET",
             "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
             "url": {
-              "raw": "{{base_url}}/api/address/user/{{userId}}",
+              "raw": "{{base_url}}/address/user/{{userId}}",
               "host": ["{{base_url}}"],
-              "path": ["api", "address", "user", "{{userId}}"]
+              "path": ["address", "user", "{{userId}}"]
             }
           }
         },
@@ -733,9 +733,9 @@
               { "key": "Authorization", "value": "Bearer {{token}}" }
             ],
             "url": {
-              "raw": "{{base_url}}/api/address",
+              "raw": "{{base_url}}/address",
               "host": ["{{base_url}}"],
-              "path": ["api", "address"]
+              "path": ["address"]
             },
             "body": {
               "mode": "raw",
@@ -752,9 +752,9 @@
               { "key": "Authorization", "value": "Bearer {{token}}" }
             ],
             "url": {
-              "raw": "{{base_url}}/api/address/{{addressId}}",
+              "raw": "{{base_url}}/address/{{addressId}}",
               "host": ["{{base_url}}"],
-              "path": ["api", "address", "{{addressId}}"]
+              "path": ["address", "{{addressId}}"]
             },
             "body": {
               "mode": "raw",
@@ -768,9 +768,9 @@
             "method": "DELETE",
             "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
             "url": {
-              "raw": "{{base_url}}/api/address/{{addressId}}",
+              "raw": "{{base_url}}/address/{{addressId}}",
               "host": ["{{base_url}}"],
-              "path": ["api", "address", "{{addressId}}"]
+              "path": ["address", "{{addressId}}"]
             }
           }
         }
@@ -788,9 +788,9 @@
               { "key": "Authorization", "value": "Bearer {{token}}" }
             ],
             "url": {
-              "raw": "{{base_url}}/api/orders",
+              "raw": "{{base_url}}/orders",
               "host": ["{{base_url}}"],
-              "path": ["api", "orders"]
+              "path": ["orders"]
             },
             "body": {
               "mode": "raw",
@@ -804,9 +804,9 @@
             "method": "GET",
             "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
             "url": {
-              "raw": "{{base_url}}/api/orders?page=1&limit=10",
+              "raw": "{{base_url}}/orders?page=1&limit=10",
               "host": ["{{base_url}}"],
-              "path": ["api", "orders"],
+              "path": ["orders"],
               "query": [
                 { "key": "page", "value": "1" },
                 { "key": "limit", "value": "10" }
@@ -820,9 +820,9 @@
             "method": "GET",
             "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
             "url": {
-              "raw": "{{base_url}}/api/orders/user/{{userId}}",
+              "raw": "{{base_url}}/orders/user/{{userId}}",
               "host": ["{{base_url}}"],
-              "path": ["api", "orders", "user", "{{userId}}"]
+              "path": ["orders", "user", "{{userId}}"]
             }
           }
         },
@@ -835,9 +835,9 @@
               { "key": "Authorization", "value": "Bearer {{token}}" }
             ],
             "url": {
-              "raw": "{{base_url}}/api/orders/{{orderId}}",
+              "raw": "{{base_url}}/orders/{{orderId}}",
               "host": ["{{base_url}}"],
-              "path": ["api", "orders", "{{orderId}}"]
+              "path": ["orders", "{{orderId}}"]
             },
             "body": {
               "mode": "raw",
@@ -855,9 +855,9 @@
           "request": {
             "method": "GET",
             "url": {
-              "raw": "{{base_url}}/api/reviews/product/{{productId}}?page=1&limit=10",
+              "raw": "{{base_url}}/reviews/product/{{productId}}?page=1&limit=10",
               "host": ["{{base_url}}"],
-              "path": ["api", "reviews", "product", "{{productId}}"],
+              "path": ["reviews", "product", "{{productId}}"],
               "query": [
                 { "key": "page", "value": "1" },
                 { "key": "limit", "value": "10" }
@@ -871,9 +871,9 @@
             "method": "POST",
             "header": [{ "key": "Content-Type", "value": "application/json" }],
             "url": {
-              "raw": "{{base_url}}/api/reviews",
+              "raw": "{{base_url}}/reviews",
               "host": ["{{base_url}}"],
-              "path": ["api", "reviews"]
+              "path": ["reviews"]
             },
             "body": {
               "mode": "raw",
@@ -887,9 +887,9 @@
             "method": "PATCH",
             "header": [{ "key": "Content-Type", "value": "application/json" }],
             "url": {
-              "raw": "{{base_url}}/api/reviews/{{reviewId}}",
+              "raw": "{{base_url}}/reviews/{{reviewId}}",
               "host": ["{{base_url}}"],
-              "path": ["api", "reviews", "{{reviewId}}"]
+              "path": ["reviews", "{{reviewId}}"]
             },
             "body": {
               "mode": "raw",
@@ -902,9 +902,9 @@
           "request": {
             "method": "DELETE",
             "url": {
-              "raw": "{{base_url}}/api/reviews/{{reviewId}}",
+              "raw": "{{base_url}}/reviews/{{reviewId}}",
               "host": ["{{base_url}}"],
-              "path": ["api", "reviews", "{{reviewId}}"]
+              "path": ["reviews", "{{reviewId}}"]
             }
           }
         }

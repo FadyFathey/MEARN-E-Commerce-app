@@ -67,6 +67,22 @@ server.get('/', (req, res) => {
   res.status(200).json({ message: 'running' });
 });
 
-server.listen(8000, () => {
-  console.log('server [STARTED] ~ http://localhost:8000');
+const PORT = process.env.PORT || 8000;
+
+server.listen(PORT, () => {
+  console.log(`🚀 Server [STARTED] ~ http://localhost:${PORT}`);
+  console.log(`📊 Environment: ${process.env.NODE_ENV || 'development'}`);
+  console.log(`🔗 CORS Origin: ${process.env.ORIGIN || 'http://localhost:5173'}`);
+});
+
+// Handle unhandled promise rejections
+process.on('unhandledRejection', (err) => {
+  console.error('Unhandled Promise Rejection:', err);
+  process.exit(1);
+});
+
+// Handle uncaught exceptions
+process.on('uncaughtException', (err) => {
+  console.error('Uncaught Exception:', err);
+  process.exit(1);
 });
