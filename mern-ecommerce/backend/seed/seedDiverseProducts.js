@@ -497,7 +497,11 @@ const seedDiverseProducts = async () => {
     for (const catName of requiredCategories) {
       const existingCat = await Category.findOne({ name: { $regex: new RegExp(catName, 'i') } });
       if (!existingCat) {
-        await Category.create({ name: catName });
+        await Category.create({
+          name: catName,
+          image:
+            'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=400&q=80',
+        });
         console.log(`✅ Created category: ${catName}`);
       }
     }

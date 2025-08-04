@@ -33,8 +33,55 @@ exports.deleteById = async (req, res) => {
 
 exports.getAll = async (req, res) => {
   try {
-    const coupons = await Coupon.find();
-    res.json({ success: true, message: 'Coupons fetched', data: coupons });
+    const filter = {};
+    const sort = {};
+
+    // Add filters if needed
+    if (req.query.isActive !== undefined) {
+      filter.isActive = req.query.isActive === 'true';
+    }
+
+    // Sorting
+    if (req.query.sort) {
+      sort[req.query.sort] = req.query.order === 'asc' ? 1 : -1;
+    } else {
+      // Default sorting by creation date
+      sort.createdAt = -1;
+    }
+
+    // Pagination parameters with validation
+    const page = Math.max(1, parseInt(req.query.page) || 1);
+    const limit = Math.max(1, Math.min(100, parseInt(req.query.limit) || 20)); // Max 100 items per page
+    const skip = (page - 1) * limit;
+
+    // Count total coupons matching the filter
+    const totalCoupons = await Coupon.countDocuments(filter);
+
+    // Fetch paginated results
+    const results = await Coupon.find(filter).sort(sort).skip(skip).limit(limit).exec();
+
+    // Calculate pagination metadata
+    const totalPages = Math.ceil(totalCoupons / limit);
+    const hasNextPage = page < totalPages;
+    const hasPreviousPage = page > 1;
+
+    // Build response with pagination metadata
+    const response = {
+      success: true,
+      message: 'Coupons fetched',
+      data: results,
+      pagination: {
+        currentPage: page,
+        pageSize: limit,
+        totalPages: totalPages,
+        totalCoupons: totalCoupons,
+        hasNextPage: hasNextPage,
+        hasPreviousPage: hasPreviousPage,
+      },
+    };
+
+    res.set('X-Total-Count', totalCoupons);
+    res.status(200).json(response);
   } catch (err) {
     res.status(500).json({ success: false, message: 'Error fetching coupons' });
   }

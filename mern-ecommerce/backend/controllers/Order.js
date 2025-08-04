@@ -95,24 +95,69 @@ exports.getByUserId = async (req, res) => {
 
 exports.getAll = async (req, res) => {
   try {
-    let skip = 0;
-    let limit = 0;
+    const filter = {};
+    const sort = {};
 
-    if (req.query.page && req.query.limit) {
-      const pageSize = req.query.limit;
-      const page = req.query.page;
-      skip = pageSize * (page - 1);
-      limit = pageSize;
+    // Add filters if needed
+    if (req.query.status) {
+      filter.status = req.query.status;
+    }
+    if (req.query.user) {
+      filter.user = req.query.user;
     }
 
-    const totalDocs = await Order.find({}).countDocuments().exec();
-    const results = await Order.find({}).skip(skip).limit(limit).exec();
+    // Sorting
+    if (req.query.sort) {
+      sort[req.query.sort] = req.query.order === 'asc' ? 1 : -1;
+    } else {
+      // Default sorting by creation date
+      sort.createdAt = -1;
+    }
 
-    res.header('X-Total-Count', totalDocs);
-    res.status(200).json(results);
+    // Pagination parameters with validation
+    const page = Math.max(1, parseInt(req.query.page) || 1);
+    const limit = Math.max(1, Math.min(100, parseInt(req.query.limit) || 20)); // Max 100 items per page
+    const skip = (page - 1) * limit;
+
+    // Count total orders matching the filter
+    const totalOrders = await Order.countDocuments(filter);
+
+    // Fetch paginated results
+    const results = await Order.find(filter)
+      .sort(sort)
+      .skip(skip)
+      .limit(limit)
+      .populate('user', 'name email')
+      .populate('products.product')
+      .exec();
+
+    // Calculate pagination metadata
+    const totalPages = Math.ceil(totalOrders / limit);
+    const hasNextPage = page < totalPages;
+    const hasPreviousPage = page > 1;
+
+    // Build response with pagination metadata
+    const response = {
+      success: true,
+      message: 'Orders fetched',
+      data: results,
+      pagination: {
+        currentPage: page,
+        pageSize: limit,
+        totalPages: totalPages,
+        totalOrders: totalOrders,
+        hasNextPage: hasNextPage,
+        hasPreviousPage: hasPreviousPage,
+      },
+    };
+
+    res.set('X-Total-Count', totalOrders);
+    res.status(200).json(response);
   } catch (error) {
     console.log(error);
-    res.status(500).json({ message: 'Error fetching orders, please try again later' });
+    res
+      .status(500)
+      .json({ success: false, message: 'Error fetching orders, please try again later' });
   }
 };
 

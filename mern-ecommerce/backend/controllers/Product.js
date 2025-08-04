@@ -27,8 +27,9 @@ exports.getAll = async (req, res) => {
   try {
     const filter = {};
     const sort = {};
-    let skip = 0;
-    let limit = 0;
+
+    // Always exclude deleted products
+    filter.isDeleted = { $ne: true };
 
     // Full-text search
     if (req.query.search) {
@@ -69,14 +70,15 @@ exports.getAll = async (req, res) => {
       sort.createdAt = -1;
     }
 
-    if (req.query.page && req.query.limit) {
-      const pageSize = Number(req.query.limit);
-      const page = Number(req.query.page);
-      skip = pageSize * (page - 1);
-      limit = pageSize;
-    }
+    // Pagination parameters with validation
+    const page = Math.max(1, parseInt(req.query.page) || 1);
+    const limit = Math.max(1, Math.min(100, parseInt(req.query.limit) || 20)); // Max 100 items per page
+    const skip = (page - 1) * limit;
 
-    const totalDocs = await Product.find(filter).countDocuments().exec();
+    // Count total products matching the filter
+    const totalProducts = await Product.countDocuments(filter);
+
+    // Fetch paginated results
     const results = await Product.find(filter)
       .sort(sort)
       .skip(skip)
@@ -84,8 +86,29 @@ exports.getAll = async (req, res) => {
       .populate('brand')
       .populate('category')
       .exec();
-    res.set('X-Total-Count', totalDocs);
-    res.status(200).json({ success: true, message: 'Products fetched', data: results });
+
+    // Calculate pagination metadata
+    const totalPages = Math.ceil(totalProducts / limit);
+    const hasNextPage = page < totalPages;
+    const hasPreviousPage = page > 1;
+
+    // Build response with pagination metadata
+    const response = {
+      success: true,
+      message: 'Products fetched',
+      data: results,
+      pagination: {
+        currentPage: page,
+        pageSize: limit,
+        totalPages: totalPages,
+        totalProducts: totalProducts,
+        hasNextPage: hasNextPage,
+        hasPreviousPage: hasPreviousPage,
+      },
+    };
+
+    res.set('X-Total-Count', totalProducts);
+    res.status(200).json(response);
   } catch (error) {
     res
       .status(500)
@@ -160,12 +183,44 @@ exports.deleteById = async (req, res) => {
 // Admin-specific methods for managing product attributes
 exports.getFeaturedProducts = async (req, res) => {
   try {
+    // Pagination parameters with validation
+    const page = Math.max(1, parseInt(req.query.page) || 1);
+    const limit = Math.max(1, Math.min(100, parseInt(req.query.limit) || 10)); // Default 10 for featured
+    const skip = (page - 1) * limit;
+
+    // Count total featured products
+    const totalProducts = await Product.countDocuments({ isFeatured: true, isDeleted: false });
+
+    // Fetch paginated results
     const products = await Product.find({ isFeatured: true, isDeleted: false })
       .sort({ priorityScore: -1, createdAt: -1 })
       .populate('brand')
       .populate('category')
-      .limit(10);
-    res.status(200).json({ success: true, message: 'Featured products fetched', data: products });
+      .skip(skip)
+      .limit(limit);
+
+    // Calculate pagination metadata
+    const totalPages = Math.ceil(totalProducts / limit);
+    const hasNextPage = page < totalPages;
+    const hasPreviousPage = page > 1;
+
+    // Build response with pagination metadata
+    const response = {
+      success: true,
+      message: 'Featured products fetched',
+      data: products,
+      pagination: {
+        currentPage: page,
+        pageSize: limit,
+        totalPages: totalPages,
+        totalProducts: totalProducts,
+        hasNextPage: hasNextPage,
+        hasPreviousPage: hasPreviousPage,
+      },
+    };
+
+    res.set('X-Total-Count', totalProducts);
+    res.status(200).json(response);
   } catch (error) {
     res.status(500).json({ success: false, message: 'Error fetching featured products' });
   }
@@ -173,12 +228,44 @@ exports.getFeaturedProducts = async (req, res) => {
 
 exports.getTopSellers = async (req, res) => {
   try {
+    // Pagination parameters with validation
+    const page = Math.max(1, parseInt(req.query.page) || 1);
+    const limit = Math.max(1, Math.min(100, parseInt(req.query.limit) || 10)); // Default 10 for top sellers
+    const skip = (page - 1) * limit;
+
+    // Count total top seller products
+    const totalProducts = await Product.countDocuments({ isTopSeller: true, isDeleted: false });
+
+    // Fetch paginated results
     const products = await Product.find({ isTopSeller: true, isDeleted: false })
       .sort({ priorityScore: -1, createdAt: -1 })
       .populate('brand')
       .populate('category')
-      .limit(10);
-    res.status(200).json({ success: true, message: 'Top sellers fetched', data: products });
+      .skip(skip)
+      .limit(limit);
+
+    // Calculate pagination metadata
+    const totalPages = Math.ceil(totalProducts / limit);
+    const hasNextPage = page < totalPages;
+    const hasPreviousPage = page > 1;
+
+    // Build response with pagination metadata
+    const response = {
+      success: true,
+      message: 'Top sellers fetched',
+      data: products,
+      pagination: {
+        currentPage: page,
+        pageSize: limit,
+        totalPages: totalPages,
+        totalProducts: totalProducts,
+        hasNextPage: hasNextPage,
+        hasPreviousPage: hasPreviousPage,
+      },
+    };
+
+    res.set('X-Total-Count', totalProducts);
+    res.status(200).json(response);
   } catch (error) {
     res.status(500).json({ success: false, message: 'Error fetching top sellers' });
   }
@@ -186,12 +273,44 @@ exports.getTopSellers = async (req, res) => {
 
 exports.getNewArrivals = async (req, res) => {
   try {
+    // Pagination parameters with validation
+    const page = Math.max(1, parseInt(req.query.page) || 1);
+    const limit = Math.max(1, Math.min(100, parseInt(req.query.limit) || 10)); // Default 10 for new arrivals
+    const skip = (page - 1) * limit;
+
+    // Count total new arrival products
+    const totalProducts = await Product.countDocuments({ isNewArrival: true, isDeleted: false });
+
+    // Fetch paginated results
     const products = await Product.find({ isNewArrival: true, isDeleted: false })
       .sort({ createdAt: -1, priorityScore: -1 })
       .populate('brand')
       .populate('category')
-      .limit(10);
-    res.status(200).json({ success: true, message: 'New arrivals fetched', data: products });
+      .skip(skip)
+      .limit(limit);
+
+    // Calculate pagination metadata
+    const totalPages = Math.ceil(totalProducts / limit);
+    const hasNextPage = page < totalPages;
+    const hasPreviousPage = page > 1;
+
+    // Build response with pagination metadata
+    const response = {
+      success: true,
+      message: 'New arrivals fetched',
+      data: products,
+      pagination: {
+        currentPage: page,
+        pageSize: limit,
+        totalPages: totalPages,
+        totalProducts: totalProducts,
+        hasNextPage: hasNextPage,
+        hasPreviousPage: hasPreviousPage,
+      },
+    };
+
+    res.set('X-Total-Count', totalProducts);
+    res.status(200).json(response);
   } catch (error) {
     res.status(500).json({ success: false, message: 'Error fetching new arrivals' });
   }
@@ -199,12 +318,44 @@ exports.getNewArrivals = async (req, res) => {
 
 exports.getBestDeals = async (req, res) => {
   try {
+    // Pagination parameters with validation
+    const page = Math.max(1, parseInt(req.query.page) || 1);
+    const limit = Math.max(1, Math.min(100, parseInt(req.query.limit) || 10)); // Default 10 for best deals
+    const skip = (page - 1) * limit;
+
+    // Count total best deal products
+    const totalProducts = await Product.countDocuments({ isBestDeal: true, isDeleted: false });
+
+    // Fetch paginated results
     const products = await Product.find({ isBestDeal: true, isDeleted: false })
       .sort({ discountPercentage: -1, priorityScore: -1 })
       .populate('brand')
       .populate('category')
-      .limit(10);
-    res.status(200).json({ success: true, message: 'Best deals fetched', data: products });
+      .skip(skip)
+      .limit(limit);
+
+    // Calculate pagination metadata
+    const totalPages = Math.ceil(totalProducts / limit);
+    const hasNextPage = page < totalPages;
+    const hasPreviousPage = page > 1;
+
+    // Build response with pagination metadata
+    const response = {
+      success: true,
+      message: 'Best deals fetched',
+      data: products,
+      pagination: {
+        currentPage: page,
+        pageSize: limit,
+        totalPages: totalPages,
+        totalProducts: totalProducts,
+        hasNextPage: hasNextPage,
+        hasPreviousPage: hasPreviousPage,
+      },
+    };
+
+    res.set('X-Total-Count', totalProducts);
+    res.status(200).json(response);
   } catch (error) {
     res.status(500).json({ success: false, message: 'Error fetching best deals' });
   }
@@ -212,12 +363,44 @@ exports.getBestDeals = async (req, res) => {
 
 exports.getFlashDeals = async (req, res) => {
   try {
+    // Pagination parameters with validation
+    const page = Math.max(1, parseInt(req.query.page) || 1);
+    const limit = Math.max(1, Math.min(100, parseInt(req.query.limit) || 10)); // Default 10 for flash deals
+    const skip = (page - 1) * limit;
+
+    // Count total flash deal products
+    const totalProducts = await Product.countDocuments({ isFlashDeal: true, isDeleted: false });
+
+    // Fetch paginated results
     const products = await Product.find({ isFlashDeal: true, isDeleted: false })
       .sort({ priorityScore: -1, createdAt: -1 })
       .populate('brand')
       .populate('category')
-      .limit(10);
-    res.status(200).json({ success: true, message: 'Flash deals fetched', data: products });
+      .skip(skip)
+      .limit(limit);
+
+    // Calculate pagination metadata
+    const totalPages = Math.ceil(totalProducts / limit);
+    const hasNextPage = page < totalPages;
+    const hasPreviousPage = page > 1;
+
+    // Build response with pagination metadata
+    const response = {
+      success: true,
+      message: 'Flash deals fetched',
+      data: products,
+      pagination: {
+        currentPage: page,
+        pageSize: limit,
+        totalPages: totalPages,
+        totalProducts: totalProducts,
+        hasNextPage: hasNextPage,
+        hasPreviousPage: hasPreviousPage,
+      },
+    };
+
+    res.set('X-Total-Count', totalProducts);
+    res.status(200).json(response);
   } catch (error) {
     res.status(500).json({ success: false, message: 'Error fetching flash deals' });
   }
@@ -225,12 +408,44 @@ exports.getFlashDeals = async (req, res) => {
 
 exports.getTrendingProducts = async (req, res) => {
   try {
+    // Pagination parameters with validation
+    const page = Math.max(1, parseInt(req.query.page) || 1);
+    const limit = Math.max(1, Math.min(100, parseInt(req.query.limit) || 10)); // Default 10 for trending
+    const skip = (page - 1) * limit;
+
+    // Count total trending products
+    const totalProducts = await Product.countDocuments({ isTrending: true, isDeleted: false });
+
+    // Fetch paginated results
     const products = await Product.find({ isTrending: true, isDeleted: false })
       .sort({ priorityScore: -1, createdAt: -1 })
       .populate('brand')
       .populate('category')
-      .limit(10);
-    res.status(200).json({ success: true, message: 'Trending products fetched', data: products });
+      .skip(skip)
+      .limit(limit);
+
+    // Calculate pagination metadata
+    const totalPages = Math.ceil(totalProducts / limit);
+    const hasNextPage = page < totalPages;
+    const hasPreviousPage = page > 1;
+
+    // Build response with pagination metadata
+    const response = {
+      success: true,
+      message: 'Trending products fetched',
+      data: products,
+      pagination: {
+        currentPage: page,
+        pageSize: limit,
+        totalPages: totalPages,
+        totalProducts: totalProducts,
+        hasNextPage: hasNextPage,
+        hasPreviousPage: hasPreviousPage,
+      },
+    };
+
+    res.set('X-Total-Count', totalProducts);
+    res.status(200).json(response);
   } catch (error) {
     res.status(500).json({ success: false, message: 'Error fetching trending products' });
   }
@@ -283,16 +498,51 @@ exports.updateProductAttributes = async (req, res) => {
 exports.getProductsByTag = async (req, res) => {
   try {
     const { tag } = req.params;
+
+    // Pagination parameters with validation
+    const page = Math.max(1, parseInt(req.query.page) || 1);
+    const limit = Math.max(1, Math.min(100, parseInt(req.query.limit) || 20)); // Default 20 for tag products
+    const skip = (page - 1) * limit;
+
+    // Count total products with this tag
+    const totalProducts = await Product.countDocuments({
+      tags: { $in: [tag] },
+      isDeleted: false,
+    });
+
+    // Fetch paginated results
     const products = await Product.find({
       tags: { $in: [tag] },
       isDeleted: false,
     })
       .sort({ priorityScore: -1, createdAt: -1 })
       .populate('brand')
-      .populate('category');
-    res
-      .status(200)
-      .json({ success: true, message: `Products with tag '${tag}' fetched`, data: products });
+      .populate('category')
+      .skip(skip)
+      .limit(limit);
+
+    // Calculate pagination metadata
+    const totalPages = Math.ceil(totalProducts / limit);
+    const hasNextPage = page < totalPages;
+    const hasPreviousPage = page > 1;
+
+    // Build response with pagination metadata
+    const response = {
+      success: true,
+      message: `Products with tag '${tag}' fetched`,
+      data: products,
+      pagination: {
+        currentPage: page,
+        pageSize: limit,
+        totalPages: totalPages,
+        totalProducts: totalProducts,
+        hasNextPage: hasNextPage,
+        hasPreviousPage: hasPreviousPage,
+      },
+    };
+
+    res.set('X-Total-Count', totalProducts);
+    res.status(200).json(response);
   } catch (error) {
     res.status(500).json({ success: false, message: 'Error fetching products by tag' });
   }

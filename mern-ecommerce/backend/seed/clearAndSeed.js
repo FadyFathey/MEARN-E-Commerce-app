@@ -1,6 +1,8 @@
 const Product = require('../models/Product');
+const Category = require('../models/Category');
 const { connectToDB } = require('../database/db');
 const { seedDiverseProducts } = require('./seedDiverseProducts');
+const { seedCategory } = require('./Category');
 
 const clearAndSeed = async () => {
   try {
@@ -12,6 +14,18 @@ const clearAndSeed = async () => {
 
     // Wait for connection to stabilize
     await new Promise((resolve) => setTimeout(resolve, 2000));
+
+    // Clear existing categories
+    console.log('🗑️ Clearing existing categories...');
+    const catDeleteResult = await Category.deleteMany({});
+    console.log(`✅ Deleted ${catDeleteResult.deletedCount} existing categories`);
+
+    // Seed new categories
+    console.log('🌱 Seeding new categories...');
+    await seedCategory();
+
+    // Wait a moment
+    await new Promise((resolve) => setTimeout(resolve, 1000));
 
     // Clear existing products
     console.log('🗑️ Clearing existing products...');

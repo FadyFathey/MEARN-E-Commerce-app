@@ -1,196 +1,32 @@
 import React from 'react';
 import type { IProduct } from '../../types/prodcut';
+import type { RatingComponentProps } from '../../types/rating';
 import Rating from 'react-rating';
+import { useGetNewArrivalsQuery } from '@/store/features/products/productApiSlice';
+import { ProductCardSkeleton } from './ProductCardSkeleton';
 
 // Mock product data
-const mockProducts: IProduct[] = [
-  {
-    _id: '1',
-    title: 'T-SHIRT WITH TAPE DETAILS',
-    slug: 'tshirt-tape-details',
-    description: 'Premium cotton t-shirt with modern tape detailing',
-    images: ['https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=400&h=400&fit=crop'],
-    price: 120,
-    discountPrice: 96,
-    badges: ['20% OFF'],
-    tags: ['Casual', 'Cotton', 'Trending'],
-    isFeatured: true,
-    isTopSeller: true,
-    isNewArrival: false,
-    isBestDeal: true,
-    isLimitedStock: false,
-    isFlashDeal: false,
-    isTrending: true,
-    stock: 15,
-    variants: [
-      { size: 'S', color: 'White', stock: 5 },
-      { size: 'M', color: 'Black', stock: 8 },
-      { size: 'L', color: 'Gray', stock: 2 },
-    ],
-    averageRating: 4.5,
-    numReviews: 123,
-    category: {
-      name: 'T-Shirts',
-      slug: 't-shirts',
-    },
-    brand: {
-      name: 'Shop.Co',
-      slug: 'shop-co',
-    },
-    createdAt: '2024-07-15T10:30:00Z',
-  },
-  {
-    _id: '2',
-    title: 'SKINNY FIT JEANS',
-    slug: 'skinny-fit-jeans',
-    description: 'Modern skinny fit jeans with premium denim fabric',
-    images: ['https://images.unsplash.com/photo-1542272604-787c3835535d?w=400&h=400&fit=crop'],
-    price: 240,
-    discountPrice: 192,
-    badges: ['20% OFF'],
-    tags: ['Denim', 'Skinny Fit', 'Popular'],
-    isFeatured: false,
-    isTopSeller: true,
-    isNewArrival: true,
-    isBestDeal: false,
-    isLimitedStock: false,
-    isFlashDeal: false,
-    isTrending: true,
-    stock: 8,
-    variants: [
-      { size: '30', color: 'Blue', stock: 4 },
-      { size: '32', color: 'Black', stock: 4 },
-    ],
-    averageRating: 3.5,
-    numReviews: 67,
-    category: {
-      name: 'Jeans',
-      slug: 'jeans',
-    },
-    brand: {
-      name: 'Shop.Co',
-      slug: 'shop-co',
-    },
-    createdAt: '2024-07-20T14:15:00Z',
-  },
-  {
-    _id: '3',
-    title: 'CHECKERED SHIRT',
-    slug: 'checkered-shirt',
-    description: 'Classic checkered pattern shirt for casual wear',
-    images: ['https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=400&h=400&fit=crop'],
-    price: 180,
-    badges: [],
-    tags: ['Casual', 'Pattern', 'Classic'],
-    isFeatured: false,
-    isTopSeller: false,
-    isNewArrival: true,
-    isBestDeal: false,
-    isLimitedStock: false,
-    isFlashDeal: false,
-    isTrending: false,
-    stock: 12,
-    variants: [
-      { size: 'M', color: 'Red', stock: 6 },
-      { size: 'L', color: 'Blue', stock: 6 },
-    ],
-    averageRating: 4.5,
-    numReviews: 89,
-    category: {
-      name: 'Shirts',
-      slug: 'shirts',
-    },
-    brand: {
-      name: 'Shop.Co',
-      slug: 'shop-co',
-    },
-    createdAt: '2024-07-25T09:00:00Z',
-  },
-  {
-    _id: '4',
-    title: 'SLEEVE STRIPED T-SHIRT',
-    slug: 'sleeve-striped-tshirt',
-    description: 'Comfortable t-shirt with stylish sleeve stripes',
-    images: ['https://images.unsplash.com/photo-1583743814966-8936f37f3820?w=400&h=400&fit=crop'],
-    price: 130,
-    discountPrice: 104,
-    badges: ['20% OFF'],
-    tags: ['Striped', 'Cotton', 'Casual'],
-    isFeatured: false,
-    isTopSeller: false,
-    isNewArrival: false,
-    isBestDeal: true,
-    isLimitedStock: false,
-    isFlashDeal: false,
-    isTrending: false,
-    stock: 20,
-    variants: [
-      { size: 'S', color: 'Orange', stock: 8 },
-      { size: 'M', color: 'Orange', stock: 12 },
-    ],
-    averageRating: 4.5,
-    numReviews: 156,
-    category: {
-      name: 'T-Shirts',
-      slug: 't-shirts',
-    },
-    brand: {
-      name: 'Shop.Co',
-      slug: 'shop-co',
-    },
-    createdAt: '2024-07-10T16:45:00Z',
-  },
-];
+const mockProducts: IProduct[] = [];
+type ProductCardProps = {
+  queryParam: string;
+};
+export const ProductCard = ({ queryParam }: ProductCardProps) => {
+  const { data, isLoading, isError } = useGetNewArrivalsQuery({
+    queryParam: queryParam,
+    page: 1,
+    limit: 3,
+  });
+  const products: IProduct[] = data || mockProducts;
+  const RatingComponent = Rating as React.ComponentType<RatingComponentProps>;
 
-export const ProductCard = () => {
-  // Helper function to render stars
-  const renderStars = (rating: number) => {
-    const stars = [];
-    const fullStars = Math.floor(rating);
-    const hasHalfStar = rating % 1 !== 0;
-
-    for (let i = 0; i < fullStars; i++) {
-      stars.push(
-        <svg key={`full-${i}`} className="w-4 h-4 text-yellow-400 fill-current" viewBox="0 0 20 20">
-          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-        </svg>
-      );
-    }
-
-    if (hasHalfStar) {
-      stars.push(
-        <svg key="half" className="w-4 h-4 text-yellow-400 fill-current" viewBox="0 0 20 20">
-          <defs>
-            <linearGradient id="halfStar">
-              <stop offset="50%" stopColor="currentColor" />
-              <stop offset="50%" stopColor="#e5e7eb" />
-            </linearGradient>
-          </defs>
-          <path
-            fill="url(#halfStar)"
-            d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
-          />
-        </svg>
-      );
-    }
-
-    const emptyStars = 5 - Math.ceil(rating);
-    for (let i = 0; i < emptyStars; i++) {
-      stars.push(
-        <svg key={`empty-${i}`} className="w-4 h-4 text-gray-300 fill-current" viewBox="0 0 20 20">
-          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-        </svg>
-      );
-    }
-    return stars;
-  };
+  if (isLoading) return <ProductCardSkeleton count={3} />;
+  if (isError || !products.length) return <p>Error fetching products.</p>;
 
   return (
     <section className="bg-white py-8 sm:py-12 lg:py-16">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Products Grid - Show only first 3 products */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-          {mockProducts.slice(0, 3).map((product) => {
+          {products.map((product) => {
             const hasDiscount = product.discountPrice && product.discountPrice < product.price;
             const discountPercentage = hasDiscount
               ? Math.round(((product.price - product.discountPrice!) / product.price) * 100)
@@ -297,7 +133,7 @@ export const ProductCard = () => {
                   )}
 
                   {/* Rating and Reviews */}
-                  <Rating
+                  <RatingComponent
                     emptySymbol="fa fa-star-o text-sm text-gray-300"
                     fullSymbol="fa fa-star text-sm text-yellow-400"
                     initialRating={product.averageRating}
@@ -305,6 +141,7 @@ export const ProductCard = () => {
                     readonly
                     className="my-[10px]"
                   />
+
                   {/* Variants Preview */}
                   {product.variants.length > 0 && (
                     <div className="mb-3">

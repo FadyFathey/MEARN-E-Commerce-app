@@ -177,6 +177,7 @@
           "name": "Get All Products",
           "request": {
             "method": "GET",
+            "description": "Supports pagination using `page` and `limit` query parameters. Default: page=1, limit=20. Maximum limit: 100 items per page.",
             "url": {
               "raw": "{{base_url}}/products?search=shirt&sort=priorityScore&order=desc&page=1&limit=10&category={{categoryId}}&brand={{brandId}}&minPrice=10&maxPrice=100&isFeatured=true&tags=Electronics,Smartphone",
               "host": ["{{base_url}}"],
@@ -193,8 +194,12 @@
                   "description": "Sort field (priorityScore, price, title, createdAt)"
                 },
                 { "key": "order", "value": "desc", "description": "Sort order (asc, desc)" },
-                { "key": "page", "value": "1", "description": "Page number" },
-                { "key": "limit", "value": "10", "description": "Items per page" },
+                { "key": "page", "value": "1", "description": "Page number (default: 1)" },
+                {
+                  "key": "limit",
+                  "value": "10",
+                  "description": "Items per page (default: 20, max: 100)"
+                },
                 {
                   "key": "category",
                   "value": "{{categoryId}}",
@@ -214,18 +219,79 @@
                   "description": "Comma-separated tags filter"
                 }
               ]
-            }
+            },
+            "response": [
+              {
+                "name": "Success Response with Pagination",
+                "originalRequest": {
+                  "method": "GET",
+                  "url": {
+                    "raw": "{{base_url}}/products?page=1&limit=10",
+                    "host": ["{{base_url}}"],
+                    "path": ["products"],
+                    "query": [
+                      { "key": "page", "value": "1" },
+                      { "key": "limit", "value": "10" }
+                    ]
+                  }
+                },
+                "status": "OK",
+                "code": 200,
+                "_postman_previewlanguage": "json",
+                "header": [
+                  { "key": "Content-Type", "value": "application/json" },
+                  { "key": "X-Total-Count", "value": "50" }
+                ],
+                "cookie": [],
+                "body": "{\n  \"success\": true,\n  \"message\": \"Products fetched\",\n  \"data\": [\n    {\n      \"_id\": \"507f1f77bcf86cd799439011\",\n      \"title\": \"Premium Cotton T-Shirt\",\n      \"slug\": \"premium-cotton-tshirt\",\n      \"description\": \"High-quality cotton t-shirt with modern design\",\n      \"price\": 29.99,\n      \"discountPrice\": 24.99,\n      \"images\": [\"https://example.com/tshirt1.jpg\"],\n      \"category\": {\n        \"_id\": \"507f1f77bcf86cd799439012\",\n        \"name\": \"T-Shirts\",\n        \"slug\": \"t-shirts\"\n      },\n      \"brand\": {\n        \"_id\": \"507f1f77bcf86cd799439013\",\n        \"name\": \"Fashion Brand\",\n        \"slug\": \"fashion-brand\"\n      },\n      \"isFeatured\": true,\n      \"isTopSeller\": false,\n      \"isNewArrival\": true,\n      \"averageRating\": 4.5,\n      \"numReviews\": 25,\n      \"stock\": 50,\n      \"createdAt\": \"2024-01-15T10:30:00.000Z\"\n    }\n  ],\n  \"pagination\": {\n    \"currentPage\": 1,\n    \"pageSize\": 10,\n    \"totalPages\": 5,\n    \"totalProducts\": 50,\n    \"hasNextPage\": true,\n    \"hasPreviousPage\": false\n  }\n}"
+              }
+            ]
           }
         },
         {
           "name": "Get Featured Products",
           "request": {
             "method": "GET",
+            "description": "Supports pagination using `page` and `limit` query parameters. Default: page=1, limit=10. Maximum limit: 100 items per page.",
             "url": {
-              "raw": "{{base_url}}/products/featured",
+              "raw": "{{base_url}}/products/featured?page=1&limit=10",
               "host": ["{{base_url}}"],
-              "path": ["products", "featured"]
-            }
+              "path": ["products", "featured"],
+              "query": [
+                { "key": "page", "value": "1", "description": "Page number (default: 1)" },
+                {
+                  "key": "limit",
+                  "value": "10",
+                  "description": "Items per page (default: 10, max: 100)"
+                }
+              ]
+            },
+            "response": [
+              {
+                "name": "Success Response with Pagination",
+                "originalRequest": {
+                  "method": "GET",
+                  "url": {
+                    "raw": "{{base_url}}/products/featured?page=1&limit=10",
+                    "host": ["{{base_url}}"],
+                    "path": ["products", "featured"],
+                    "query": [
+                      { "key": "page", "value": "1" },
+                      { "key": "limit", "value": "10" }
+                    ]
+                  }
+                },
+                "status": "OK",
+                "code": 200,
+                "_postman_previewlanguage": "json",
+                "header": [
+                  { "key": "Content-Type", "value": "application/json" },
+                  { "key": "X-Total-Count", "value": "25" }
+                ],
+                "cookie": [],
+                "body": "{\n  \"success\": true,\n  \"message\": \"Featured products fetched\",\n  \"data\": [\n    {\n      \"_id\": \"507f1f77bcf86cd799439011\",\n      \"title\": \"Premium Cotton T-Shirt\",\n      \"slug\": \"premium-cotton-tshirt\",\n      \"description\": \"High-quality cotton t-shirt with modern design\",\n      \"price\": 29.99,\n      \"discountPrice\": 24.99,\n      \"images\": [\"https://example.com/tshirt1.jpg\"],\n      \"category\": {\n        \"_id\": \"507f1f77bcf86cd799439012\",\n        \"name\": \"T-Shirts\",\n        \"slug\": \"t-shirts\"\n      },\n      \"brand\": {\n        \"_id\": \"507f1f77bcf86cd799439013\",\n        \"name\": \"Fashion Brand\",\n        \"slug\": \"fashion-brand\"\n      },\n      \"isFeatured\": true,\n      \"priorityScore\": 95,\n      \"createdAt\": \"2024-01-15T10:30:00.000Z\"\n    }\n  ],\n  \"pagination\": {\n    \"currentPage\": 1,\n    \"pageSize\": 10,\n    \"totalPages\": 3,\n    \"totalProducts\": 25,\n    \"hasNextPage\": true,\n    \"hasPreviousPage\": false\n  }\n}"
+              }
+            ]
           }
         },
         {
@@ -243,10 +309,19 @@
           "name": "Get New Arrivals",
           "request": {
             "method": "GET",
+            "description": "Supports pagination using `page` and `limit` query parameters. Default: page=1, limit=10. Maximum limit: 100 items per page.",
             "url": {
-              "raw": "{{base_url}}/products/new-arrivals",
+              "raw": "{{base_url}}/products/new-arrivals?page=1&limit=10",
               "host": ["{{base_url}}"],
-              "path": ["products", "new-arrivals"]
+              "path": ["products", "new-arrivals"],
+              "query": [
+                { "key": "page", "value": "1", "description": "Page number (default: 1)" },
+                {
+                  "key": "limit",
+                  "value": "10",
+                  "description": "Items per page (default: 10, max: 100)"
+                }
+              ]
             }
           }
         },
@@ -298,10 +373,19 @@
           "name": "Get Products by Tag",
           "request": {
             "method": "GET",
+            "description": "Supports pagination using `page` and `limit` query parameters. Default: page=1, limit=20. Maximum limit: 100 items per page.",
             "url": {
-              "raw": "{{base_url}}/products/tag/Electronics",
+              "raw": "{{base_url}}/products/tag/Electronics?page=1&limit=10",
               "host": ["{{base_url}}"],
-              "path": ["products", "tag", "Electronics"]
+              "path": ["products", "tag", "Electronics"],
+              "query": [
+                { "key": "page", "value": "1", "description": "Page number (default: 1)" },
+                {
+                  "key": "limit",
+                  "value": "10",
+                  "description": "Items per page (default: 20, max: 100)"
+                }
+              ]
             }
           }
         },
@@ -427,7 +511,7 @@
             },
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"name\": \"Electronics\",\n  \"description\": \"Electronic devices and accessories\"\n}"
+              "raw": "{\n  \"name\": \"Electronics\",\n  \"image\": \"https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=400&q=80\"\n}"
             }
           }
         },
@@ -446,7 +530,7 @@
             },
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"name\": \"Updated Electronics\",\n  \"description\": \"Updated description\"\n}"
+              "raw": "{\n  \"name\": \"Updated Electronics\",\n  \"image\": \"https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=400&q=80\"\n}"
             }
           }
         },
@@ -802,16 +886,54 @@
           "name": "Get All Orders (Admin)",
           "request": {
             "method": "GET",
+            "description": "Supports pagination using `page` and `limit` query parameters. Default: page=1, limit=20. Maximum limit: 100 items per page. Can filter by status and user.",
             "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
             "url": {
-              "raw": "{{base_url}}/orders?page=1&limit=10",
+              "raw": "{{base_url}}/orders?page=1&limit=10&status=pending&sort=createdAt&order=desc",
               "host": ["{{base_url}}"],
               "path": ["orders"],
               "query": [
-                { "key": "page", "value": "1" },
-                { "key": "limit", "value": "10" }
+                { "key": "page", "value": "1", "description": "Page number (default: 1)" },
+                {
+                  "key": "limit",
+                  "value": "10",
+                  "description": "Items per page (default: 20, max: 100)"
+                },
+                { "key": "status", "value": "pending", "description": "Filter by order status" },
+                {
+                  "key": "sort",
+                  "value": "createdAt",
+                  "description": "Sort field (createdAt, total, status)"
+                },
+                { "key": "order", "value": "desc", "description": "Sort order (asc, desc)" }
               ]
-            }
+            },
+            "response": [
+              {
+                "name": "Success Response with Pagination",
+                "originalRequest": {
+                  "method": "GET",
+                  "url": {
+                    "raw": "{{base_url}}/orders?page=1&limit=10",
+                    "host": ["{{base_url}}"],
+                    "path": ["orders"],
+                    "query": [
+                      { "key": "page", "value": "1" },
+                      { "key": "limit", "value": "10" }
+                    ]
+                  }
+                },
+                "status": "OK",
+                "code": 200,
+                "_postman_previewlanguage": "json",
+                "header": [
+                  { "key": "Content-Type", "value": "application/json" },
+                  { "key": "X-Total-Count", "value": "25" }
+                ],
+                "cookie": [],
+                "body": "{\n  \"success\": true,\n  \"message\": \"Orders fetched\",\n  \"data\": [\n    {\n      \"_id\": \"507f1f77bcf86cd799439011\",\n      \"user\": {\n        \"_id\": \"507f1f77bcf86cd799439012\",\n        \"name\": \"John Doe\",\n        \"email\": \"john@example.com\"\n      },\n      \"products\": [\n        {\n          \"product\": {\n            \"_id\": \"507f1f77bcf86cd799439013\",\n            \"title\": \"Premium Cotton T-Shirt\",\n            \"price\": 29.99\n          },\n          \"quantity\": 2,\n          \"price\": 29.99\n        }\n      ],\n      \"total\": 59.98,\n      \"status\": \"pending\",\n      \"shippingAddress\": {\n        \"street\": \"123 Main St\",\n        \"city\": \"New York\",\n        \"state\": \"NY\",\n        \"zipCode\": \"10001\"\n      },\n      \"createdAt\": \"2024-01-15T10:30:00.000Z\"\n    }\n  ],\n  \"pagination\": {\n    \"currentPage\": 1,\n    \"pageSize\": 10,\n    \"totalPages\": 3,\n    \"totalOrders\": 25,\n    \"hasNextPage\": true,\n    \"hasPreviousPage\": false\n  }\n}"
+              }
+            ]
           }
         },
         {
@@ -936,12 +1058,54 @@
           "name": "Get All Coupons (Admin)",
           "request": {
             "method": "GET",
+            "description": "Supports pagination using `page` and `limit` query parameters. Default: page=1, limit=20. Maximum limit: 100 items per page. Can filter by active status.",
             "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
             "url": {
-              "raw": "{{base_url}}/api/coupon",
+              "raw": "{{base_url}}/api/coupon?page=1&limit=10&isActive=true&sort=createdAt&order=desc",
               "host": ["{{base_url}}"],
-              "path": ["api", "coupon"]
-            }
+              "path": ["api", "coupon"],
+              "query": [
+                { "key": "page", "value": "1", "description": "Page number (default: 1)" },
+                {
+                  "key": "limit",
+                  "value": "10",
+                  "description": "Items per page (default: 20, max: 100)"
+                },
+                { "key": "isActive", "value": "true", "description": "Filter by active status" },
+                {
+                  "key": "sort",
+                  "value": "createdAt",
+                  "description": "Sort field (createdAt, discountValue, code)"
+                },
+                { "key": "order", "value": "desc", "description": "Sort order (asc, desc)" }
+              ]
+            },
+            "response": [
+              {
+                "name": "Success Response with Pagination",
+                "originalRequest": {
+                  "method": "GET",
+                  "url": {
+                    "raw": "{{base_url}}/api/coupon?page=1&limit=10",
+                    "host": ["{{base_url}}"],
+                    "path": ["api", "coupon"],
+                    "query": [
+                      { "key": "page", "value": "1" },
+                      { "key": "limit", "value": "10" }
+                    ]
+                  }
+                },
+                "status": "OK",
+                "code": 200,
+                "_postman_previewlanguage": "json",
+                "header": [
+                  { "key": "Content-Type", "value": "application/json" },
+                  { "key": "X-Total-Count", "value": "15" }
+                ],
+                "cookie": [],
+                "body": "{\n  \"success\": true,\n  \"message\": \"Coupons fetched\",\n  \"data\": [\n    {\n      \"_id\": \"507f1f77bcf86cd799439011\",\n      \"code\": \"SAVE20\",\n      \"discountType\": \"percentage\",\n      \"discountValue\": 20,\n      \"isActive\": true,\n      \"usageLimit\": 100,\n      \"usedCount\": 25,\n      \"expiryDate\": \"2024-12-31T23:59:59.000Z\",\n      \"createdAt\": \"2024-01-15T10:30:00.000Z\"\n    }\n  ],\n  \"pagination\": {\n    \"currentPage\": 1,\n    \"pageSize\": 10,\n    \"totalPages\": 2,\n    \"totalCoupons\": 15,\n    \"hasNextPage\": true,\n    \"hasPreviousPage\": false\n  }\n}"
+              }
+            ]
           }
         },
         {

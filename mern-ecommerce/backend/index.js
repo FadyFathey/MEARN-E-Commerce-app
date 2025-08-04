@@ -30,10 +30,26 @@ connectToDB();
 // Run user role migration
 migrateUserRoles().catch(console.error);
 
+// CORS configuration
+const allowedOrigins = [
+  'http://localhost:3000',
+  'http://localhost:5173',
+  process.env.ORIGIN,
+].filter(Boolean); // Remove any undefined values
+
 // middlewares
 server.use(
   cors({
-    origin: process.env.ORIGIN,
+    origin: function (origin, callback) {
+      // Allow requests with no origin (like mobile apps or curl requests)
+      if (!origin) return callback(null, true);
+
+      if (allowedOrigins.indexOf(origin) !== -1) {
+        callback(null, true);
+      } else {
+        callback(new Error('Not allowed by CORS'));
+      }
+    },
     credentials: true,
     exposedHeaders: ['X-Total-Count'],
     methods: ['GET', 'POST', 'PATCH', 'DELETE'],
@@ -72,7 +88,7 @@ const PORT = process.env.PORT || 8000;
 server.listen(PORT, () => {
   console.log(`🚀 Server [STARTED] ~ http://localhost:${PORT}`);
   console.log(`📊 Environment: ${process.env.NODE_ENV || 'development'}`);
-  console.log(`🔗 CORS Origin: ${process.env.ORIGIN || 'http://localhost:5173'}`);
+  console.log(`🔗 CORS Allowed Origins: ${allowedOrigins.join(', ')}`);
 });
 
 // Handle unhandled promise rejections
